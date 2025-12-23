@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drei-alben-proxy
+  namespace: drei-alben
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drei-alben-proxy
+  template:
+    metadata:
+      labels:
+        app: drei-alben-proxy
+    spec:
+      containers:
+        - name: drei-alben-proxy
+          image: ghcr.io/janne6565/drei-alben-api-proxy:v1.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DDFDB_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: drei-alben-api-proxy-secrets
+                  key: DDFDB_API_KEY
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /api/actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/actuator/health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 5

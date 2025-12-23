@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: drei-alben-proxy
+  namespace: drei-alben
+spec:
+  selector:
+    app: drei-alben-proxy
+  ports:
+    - port: 80 # inside the cluster
+      targetPort: 8080
+      protocol: TCP
+  type: ClusterIP

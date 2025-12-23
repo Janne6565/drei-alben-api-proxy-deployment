@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: drei-alben-proxy
+  namespace: drei-alben
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  rules:
+    - host: drei-alben.jannekeipert.de
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: drei-alben-proxy
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - drei-alben.jannekeipert.de
+      secretName: multi-domain-cert
