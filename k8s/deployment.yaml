@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: drei-alben-proxy
-          image: ghcr.io/janne6565/drei-alben-api-proxy:v1.1.0
+          image: ghcr.io/janne6565/drei-alben-api-proxy:v1.1.1
           ports:
             - containerPort: 8080
           env:
