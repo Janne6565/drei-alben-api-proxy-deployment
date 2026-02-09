@@ -24,6 +24,18 @@ spec:
                 secretKeyRef:
                   name: drei-alben-api-proxy-secrets
                   key: DDFDB_API_KEY
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/drei_alben
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
           resources:
             limits:
               memory: "512Mi"
