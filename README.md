@@ -30,7 +30,8 @@ kubectl create secret generic postgres-secret \
 # Backend API secrets
 kubectl create secret generic drei-alben-api-proxy-secrets \
   --namespace drei-alben \
-  --from-literal=DDFDB_API_KEY=<YOUR_DDFDB_API_KEY>
+  --from-literal=DDFDB_API_KEY=<YOUR_DDFDB_API_KEY> \
+  --from-literal=ADMIN_TOKEN=<YOUR_SECURE_ADMIN_TOKEN>
 ```
 
 **Note**: The `postgres-secret.yaml` file in this repo is a template only. Do not commit actual passwords!
@@ -77,6 +78,42 @@ The backend supports Expo Push Notifications for new album releases:
 - Tokens stored in PostgreSQL
 - Notifications sent when new albums detected (every 5 minutes)
 - API endpoints: `/api/v1/push-tokens/*`
+
+### Admin Test Notification
+
+Send a test push notification to all registered devices:
+
+```bash
+# Send to all enabled devices
+curl -X POST https://your-domain.com/api/v1/admin/notifications \
+  -H "Content-Type: application/json" \
+  -H "X-Admin-Token: YOUR_ADMIN_TOKEN" \
+  -d '{
+    "title": "Test Notification",
+    "body": "This is a test message",
+    "onlyEnabled": true
+  }'
+
+# Send to ALL devices (including disabled)
+curl -X POST https://your-domain.com/api/v1/admin/notifications \
+  -H "Content-Type: application/json" \
+  -H "X-Admin-Token: YOUR_ADMIN_TOKEN" \
+  -d '{
+    "title": "Test Notification",
+    "body": "This is a test message",
+    "onlyEnabled": false
+  }'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Test notification sent",
+  "deviceCount": 42,
+  "onlyEnabled": true
+}
+```
 
 ## Updating Deployment
 
