@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: drei-alben-proxy
-          image: ghcr.io/janne6565/drei-alben-api-proxy:v1.1.6
+          image: ghcr.io/janne6565/drei-alben-api-proxy:v1.1.8
           ports:
             - containerPort: 8080
           env:
@@ -41,6 +41,16 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: POSTGRES_PASSWORD
+            - name: WEBHOOK_URL
+              valueFrom: 
+                secretKeyRef:
+                  name: drei-alben-api-proxy-secrets
+                  key: WEBHOOK_URL
+            - name: WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: drei-alben-api-proxy-secrets
+                  key: WEBHOOK_SECRET
           resources:
             limits:
               memory: "512Mi"
