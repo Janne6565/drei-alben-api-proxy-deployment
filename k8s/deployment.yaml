@@ -15,9 +15,13 @@ spec:
     spec:
       containers:
         - name: drei-alben-proxy
-          image: ghcr.io/janne6565/drei-alben-api-proxy:v1.1.8
+          image: ghcr.io/janne6565/drei-alben-api-proxy:v1.1.9
           ports:
-            - containerPort: 8080
+            - name: http
+              containerPort: 8080
+            - name: metrics
+              # Spring management port: actuator health (probes) + /actuator/prometheus.
+              containerPort: 8081
           env:
             - name: DDFDB_API_KEY
               valueFrom:
@@ -60,13 +64,13 @@ spec:
               cpu: "250m"
           livenessProbe:
             httpGet:
-              path: /api/actuator/health
-              port: 8080
+              path: /actuator/health/liveness
+              port: metrics
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /api/actuator/health
-              port: 8080
+              path: /actuator/health/readiness
+              port: metrics
             initialDelaySeconds: 15
             periodSeconds: 5

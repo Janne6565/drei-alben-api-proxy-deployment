@@ -3,11 +3,21 @@ kind: Service
 metadata:
   name: drei-alben-proxy
   namespace: drei-alben
+  labels:
+    # Selected by the ServiceMonitor (servicemonitor.yaml).
+    app: drei-alben-proxy
 spec:
   selector:
     app: drei-alben-proxy
   ports:
-    - port: 80 # inside the cluster
+    - name: http
+      port: 80 # inside the cluster; the Ingress routes /api here
       targetPort: 8080
+      protocol: TCP
+    - name: metrics
+      # Spring management port (actuator). No Ingress points at it: only the k8s probes
+      # and the in-cluster Grafana Alloy scrape reach it.
+      port: 8081
+      targetPort: 8081
       protocol: TCP
   type: ClusterIP
